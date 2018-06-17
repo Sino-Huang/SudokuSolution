@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Sudoku {
-    public static final int[][] box = {
+class Sudoku {
+    private static final int[][] box = {
             {1, 1, 1, 2, 2, 2, 3, 3, 3},
             {1, 1, 1, 2, 2, 2, 3, 3, 3},
             {1, 1, 1, 2, 2, 2, 3, 3, 3},
@@ -17,25 +17,25 @@ public class Sudoku {
             {7, 7, 7, 8, 8, 8, 9, 9, 9},
             {7, 7, 7, 8, 8, 8, 9, 9, 9},
     };
-    public static final int[][] sample = {
-            {0, 0, 0, 2, 6, 0, 7, 0, 1},
-            {6, 8, 0, 0, 7, 0, 0, 9, 0},
-            {1, 9, 0, 0, 0, 4, 5, 0, 0},
-            {8, 2, 0, 1, 0, 0, 0, 4, 0},
-            {0, 0, 4, 6, 0, 2, 9, 0, 0},
-            {0, 5, 0, 0, 0, 3, 0, 2, 8},
-            {0, 0, 9, 3, 0, 0, 0, 7, 4},
-            {0, 4, 0, 0, 5, 0, 0, 3, 6},
-            {7, 0, 3, 0, 1, 8, 0, 0, 0},
-    };
+//    public static final int[][] sample = {
+//            {0, 0, 0, 2, 6, 0, 7, 0, 1},
+//            {6, 8, 0, 0, 7, 0, 0, 9, 0},
+//            {1, 9, 0, 0, 0, 4, 5, 0, 0},
+//            {8, 2, 0, 1, 0, 0, 0, 4, 0},
+//            {0, 0, 4, 6, 0, 2, 9, 0, 0},
+//            {0, 5, 0, 0, 0, 3, 0, 2, 8},
+//            {0, 0, 9, 3, 0, 0, 0, 7, 4},
+//            {0, 4, 0, 0, 5, 0, 0, 3, 6},
+//            {7, 0, 3, 0, 1, 8, 0, 0, 0},
+//    };
 
-    public int[][] targetMap;
+    int[][] targetMap;
 
-    public Sudoku(int[][] targetMap) {
+    Sudoku(int[][] targetMap) {
         this.targetMap = targetMap;
     }
 
-    public int[][] getSolution(int[][] map) {
+    int[][] getSolution(int[][] map) {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 if (map[row][col] == 0) {
@@ -44,12 +44,12 @@ public class Sudoku {
                         return null;
                     }
 
-                    for (int i = 0; i < possible.length; i++) {
+                    for (Integer aPossible : possible) {
                         int[][] copy = new int[9][9];
                         for (int j = 0; j < 9; j++) {
                             copy[j] = map[j].clone();
                         }
-                        copy[row][col] = possible[i];
+                        copy[row][col] = aPossible;
                         int[][] output = getSolution(copy);
                         if (output != null) {
                             return output;
@@ -58,6 +58,7 @@ public class Sudoku {
                 }
             }
         }
+        printIt(map);
         return map;
     }
 
@@ -88,7 +89,7 @@ public class Sudoku {
         return find(output);
     }
 
-    public Integer[] conjunction(int[] rows, int[] cols, int[] boxes) {
+    private Integer[] conjunction(int[] rows, int[] cols, int[] boxes) {
         Set<Integer> rowSet = getSet(rows);
         Set<Integer> temp = getSet(cols);
         rowSet.retainAll(temp);
@@ -100,17 +101,17 @@ public class Sudoku {
 
     private Set<Integer> getSet(int[] args) {
         Set<Integer> output = new HashSet<>();
-        for (int i = 0; i < args.length; i++) {
-            output.add(args[i]);
+        for (int arg : args) {
+            output.add(arg);
         }
         return output;
     }
 
-    public int[] find(int[] array) {
+    private int[] find(int[] array) {
         ArrayList<Integer> temp = new ArrayList<>();
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != 0) {
-                temp.add(array[i]);
+        for (int anArray : array) {
+            if (anArray != 0) {
+                temp.add(anArray);
             }
         }
         ArrayList<Integer> temp2 = new ArrayList<>();
@@ -124,5 +125,28 @@ public class Sudoku {
         }
         return output;
     }
+
+    private void printIt(int[][] output) {
+        for (int[] anOutput : output) {
+            System.out.println(Arrays.toString(anOutput));
+        }
+    }
+
+
+//    public static void main(String[] args) {
+///*        int[][] temp = {
+//                {0, 0, 0, 2, 6, 0, 7, 0, 1},
+//                {6, 8, 0, 0, 7, 0, 0, 9, 0},
+//                {1, 9, 0, 0, 0, 4, 5, 0, 0},
+//                {8, 2, 0, 1, 0, 0, 0, 4, 0},
+//                {0, 0, 4, 6, 0, 2, 9, 0, 0},
+//                {0, 5, 0, 0, 0, 3, 0, 2, 8},
+//                {0, 0, 9, 3, 0, 0, 0, 7, 4},
+//                {0, 4, 0, 0, 5, 0, 0, 3, 6},
+//                {7, 0, 3, 0, 1, 8, 0, 0, 0},
+//        };*/
+////        Sudoku sudoku = new Sudoku(temp);
+////        int[][] output = sudoku.getSolution(sudoku.targetMap);
+//    }
 
 }
