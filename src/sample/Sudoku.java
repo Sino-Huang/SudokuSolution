@@ -17,18 +17,32 @@ public class Sudoku {
             {7, 7, 7, 8, 8, 8, 9, 9, 9},
             {7, 7, 7, 8, 8, 8, 9, 9, 9},
     };
+    public static final int[][] sample = {
+            {0, 0, 0, 2, 6, 0, 7, 0, 1},
+            {6, 8, 0, 0, 7, 0, 0, 9, 0},
+            {1, 9, 0, 0, 0, 4, 5, 0, 0},
+            {8, 2, 0, 1, 0, 0, 0, 4, 0},
+            {0, 0, 4, 6, 0, 2, 9, 0, 0},
+            {0, 5, 0, 0, 0, 3, 0, 2, 8},
+            {0, 0, 9, 3, 0, 0, 0, 7, 4},
+            {0, 4, 0, 0, 5, 0, 0, 3, 6},
+            {7, 0, 3, 0, 1, 8, 0, 0, 0},
+    };
 
-    public int[][] map;
+    public int[][] targetMap;
 
-    public Sudoku(int[][] map) {
-        this.map = map;
+    public Sudoku(int[][] targetMap) {
+        this.targetMap = targetMap;
     }
 
     public int[][] getSolution(int[][] map) {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 if (map[row][col] == 0) {
-                    Integer[] possible = conjunction(getRow(row), getCol(col), getBox(row, col));
+                    Integer[] possible = conjunction(getRow(row, map), getCol(col, map), getBox(row, col, map));
+                    if (possible.length == 0) {
+                        return null;
+                    }
 
                     for (int i = 0; i < possible.length; i++) {
                         int[][] copy = new int[9][9];
@@ -36,7 +50,10 @@ public class Sudoku {
                             copy[j] = map[j].clone();
                         }
                         copy[row][col] = possible[i];
-                        return getSolution(copy);
+                        int[][] output = getSolution(copy);
+                        if (output != null) {
+                            return output;
+                        }
                     }
                 }
             }
@@ -44,12 +61,12 @@ public class Sudoku {
         return map;
     }
 
-    private int[] getRow(int row) {
+    private int[] getRow(int row, int[][] map) {
         int[] theRow = map[row];
         return find(theRow);
     }
 
-    private int[] getCol(int col) {
+    private int[] getCol(int col, int[][] map) {
         int[] output = new int[9];
         for (int i = 0; i < output.length; i++) {
             output[i] = map[i][col];
@@ -57,7 +74,7 @@ public class Sudoku {
         return find(output);
     }
 
-    private int[] getBox(int row, int col) {
+    private int[] getBox(int row, int col, int[][] map) {
         int value = box[row][col];
         int[] output = new int[9];
         int count = 0;
@@ -106,22 +123,6 @@ public class Sudoku {
             output[i] = temp2.get(i);
         }
         return output;
-    }
-
-    public static void main(String[] args) {
-        Sudoku sudoku = new Sudoku(null);
-        System.out.println(Arrays.toString(sudoku.conjunction(new int[]{1, 2, 3, 4}, new int[]{1, 2, 3}, new int[]{3})));
-        int[] test = new int[4];
-        for (int i = 0; i < 3; i++) {
-            test[i] = 1;
-        }
-        System.out.println(Arrays.toString(test));
-        System.out.println(Arrays.toString(sudoku.find(new int[]{1, 2, 3, 4, 0, 0, 1, 1, 1, 1})));
-        int[][] temp = {{1}};
-        int[][] temp2 = temp.clone();
-        temp[0][0] = 3;
-        System.out.println(Arrays.deepToString(temp));
-        System.out.println(Arrays.deepToString(temp2));
     }
 
 }
